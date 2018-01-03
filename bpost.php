@@ -58,40 +58,40 @@ final class bpost extends AbstractHttpProvider implements Provider
             throw new InvalidArgument('Address cannot be empty.');
         }
 
-        $request = array();
-        $request['ValidateAddressesRequest'] = array(
-          'AddressToValidateList' => array(
-            'AddressToValidate' => array(
-              array(
-                '@id' => 1,
-                'PostalAddress' => array(
-                  'DeliveryPointLocation' => array(
-                    'StructuredDeliveryPointLocation' => array(
-                      'StreetName' => $query->getData('streetName'),
-                      'StreetNumber' => $query->getData('streetNumber')
-                    )
-                  ),
-                  'PostalCodeMunicipality' => array(
-                    'StructuredPostalCodeMunicipality' => array(
-                      'PostalCode' => $query->getData('postalCode', ''),
-                      'MunicipalityName' => $query->getData('locality', '')
-                    )
-                  )
-                ),
-                'DeliveringCountryISOCode' => 'BE',
-                'DispatchingCountryISOCode' => 'BE'
-              )
-            )
-          ),
-          'ValidateAddressOptions' => array(
-            'IncludeSuggestions' => false,
+        $request = [];
+        $request['ValidateAddressesRequest'] = [
+          'AddressToValidateList' => [
+            'AddressToValidate' => [
+              [
+                '@id'           => 1,
+                'PostalAddress' => [
+                  'DeliveryPointLocation' => [
+                    'StructuredDeliveryPointLocation' => [
+                      'StreetName'   => $query->getData('streetName'),
+                      'StreetNumber' => $query->getData('streetNumber'),
+                    ],
+                  ],
+                  'PostalCodeMunicipality' => [
+                    'StructuredPostalCodeMunicipality' => [
+                      'PostalCode'       => $query->getData('postalCode', ''),
+                      'MunicipalityName' => $query->getData('locality', ''),
+                    ],
+                  ],
+                ],
+                'DeliveringCountryISOCode'  => 'BE',
+                'DispatchingCountryISOCode' => 'BE',
+              ],
+            ],
+          ],
+          'ValidateAddressOptions' => [
+            'IncludeSuggestions'        => false,
             'IncludeDefaultGeoLocation' => true,
-            'IncludeSubmittedAddress' => true
-          ),
-          'CallerIdentification' => array(
-            'CallerName' => 'Geocoder PHP'
-          )
-        );
+            'IncludeSubmittedAddress'   => true,
+          ],
+          'CallerIdentification' => [
+            'CallerName' => 'Geocoder PHP',
+          ],
+        ];
 
         $json = $this->executeQuery(self::GEOCODE_ENDPOINT_URL, json_encode($request));
 
@@ -163,9 +163,9 @@ final class bpost extends AbstractHttpProvider implements Provider
      * @param string $url
      * @param string $body
      *
-     * @return string
-     *
      * @throws InvalidServerResponse
+     *
+     * @return string
      */
     protected function postUrlContents(string $url, string $body): string
     {
@@ -183,6 +183,7 @@ final class bpost extends AbstractHttpProvider implements Provider
         if (empty($body)) {
             throw InvalidServerResponse::emptyResponse($url);
         }
+
         return $body;
     }
 }
