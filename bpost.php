@@ -83,10 +83,10 @@ final class bpost extends AbstractHttpProvider implements Provider
               'DispatchingCountryISOCode' => 'BE',
             ];
         } else {
-          $addressToValidate = [
-            '@id'           => 1,
+            $addressToValidate = [
+            '@id'               => 1,
             'AddressBlockLines' => [
-              'UnstructuredAddressLine' => $address
+              'UnstructuredAddressLine' => $address,
             ],
             'DeliveringCountryISOCode'  => 'BE',
             'DispatchingCountryISOCode' => 'BE',
