@@ -58,29 +58,46 @@ final class bpost extends AbstractHttpProvider implements Provider
             throw new InvalidArgument('Address cannot be empty.');
         }
 
+        $address = $query->getText();
+        $streetName = $query->getData('streetName');
+        $streetNumber = $query->getData('streetNumber');
+
+        if (!is_null($streetName) && !is_null($streetNumber)) {
+            $addressToValidate = [
+              '@id'           => 1,
+              'PostalAddress' => [
+                'DeliveryPointLocation' => [
+                  'StructuredDeliveryPointLocation' => [
+                    'StreetName'   => $query->getData('streetName'),
+                    'StreetNumber' => $query->getData('streetNumber'),
+                  ],
+                ],
+                'PostalCodeMunicipality' => [
+                  'StructuredPostalCodeMunicipality' => [
+                    'PostalCode'       => $query->getData('postalCode', ''),
+                    'MunicipalityName' => $query->getData('locality', ''),
+                  ],
+                ],
+              ],
+              'DeliveringCountryISOCode'  => 'BE',
+              'DispatchingCountryISOCode' => 'BE',
+            ];
+        } else {
+          $addressToValidate = [
+            '@id'           => 1,
+            'AddressBlockLines' => [
+              'UnstructuredAddressLine' => $address
+            ],
+            'DeliveringCountryISOCode'  => 'BE',
+            'DispatchingCountryISOCode' => 'BE',
+          ];
+        }
+
         $request = [];
         $request['ValidateAddressesRequest'] = [
           'AddressToValidateList' => [
             'AddressToValidate' => [
-              [
-                '@id'           => 1,
-                'PostalAddress' => [
-                  'DeliveryPointLocation' => [
-                    'StructuredDeliveryPointLocation' => [
-                      'StreetName'   => $query->getData('streetName'),
-                      'StreetNumber' => $query->getData('streetNumber'),
-                    ],
-                  ],
-                  'PostalCodeMunicipality' => [
-                    'StructuredPostalCodeMunicipality' => [
-                      'PostalCode'       => $query->getData('postalCode', ''),
-                      'MunicipalityName' => $query->getData('locality', ''),
-                    ],
-                  ],
-                ],
-                'DeliveringCountryISOCode'  => 'BE',
-                'DispatchingCountryISOCode' => 'BE',
-              ],
+              $addressToValidate,
             ],
           ],
           'ValidateAddressOptions' => [
