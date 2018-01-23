@@ -119,23 +119,29 @@ final class bpost extends AbstractHttpProvider implements Provider
 
         $results = [];
         foreach ($json->ValidateAddressesResponse->ValidatedAddressResultList->ValidatedAddressResult as $location) {
-            $coordinates = $location->ValidatedAddressList->ValidatedAddress[0]->ServicePointDetail->GeographicalLocationInfo->GeographicalLocation;
-            $streetName = !empty($location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredDeliveryPointLocation->StreetName) ? $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredDeliveryPointLocation->StreetName : null;
-            $number = !empty($location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredDeliveryPointLocation->StreetNumber) ? $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredDeliveryPointLocation->StreetNumber : null;
-            $municipality = !empty($location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredPostalCodeMunicipality->MunicipalityName) ? $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredPostalCodeMunicipality->MunicipalityName : null;
-            $postCode = !empty($location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredPostalCodeMunicipality->PostalCode) ? $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress->StructuredPostalCodeMunicipality->PostalCode : null;
-            $countryCode = 'BE';
+            if (isset($location->ValidatedAddressList->ValidatedAddress[0]->ServicePointDetail, $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress)) {
+                $coordinates = $location->ValidatedAddressList->ValidatedAddress[0]->ServicePointDetail->GeographicalLocationInfo->GeographicalLocation;
 
-            $results[] = Address::createFromArray([
-                'providedBy'   => $this->getName(),
-                'latitude'     => $coordinates->Latitude->Value,
-                'longitude'    => $coordinates->Longitude->Value,
-                'streetNumber' => $number,
-                'streetName'   => $streetName,
-                'locality'     => $municipality,
-                'postalCode'   => $postCode,
-                'countryCode'  => $countryCode,
-            ]);
+                $postalAddress = $location->ValidatedAddressList->ValidatedAddress[0]->PostalAddress;
+
+                $streetName = !empty($postalAddress->StructuredDeliveryPointLocation->StreetName) ? $postalAddress->StructuredDeliveryPointLocation->StreetName : null;
+                $number = !empty($postalAddress->StructuredDeliveryPointLocation->StreetNumber) ? $postalAddress->StructuredDeliveryPointLocation->StreetNumber : null;
+                $municipality = !empty($postalAddress->StructuredPostalCodeMunicipality->MunicipalityName) ? $postalAddress->StructuredPostalCodeMunicipality->MunicipalityName : null;
+                $postCode = !empty($postalAddress->StructuredPostalCodeMunicipality->PostalCode) ? $postalAddress->StructuredPostalCodeMunicipality->PostalCode : null;
+                $countryCode = 'BE';
+
+                $results[] = Address::createFromArray([
+                    'providedBy'   => $this->getName(),
+                    'latitude'     => $coordinates->Latitude->Value,
+                    'longitude'    => $coordinates->Longitude->Value,
+                    'streetNumber' => $number,
+                    'streetName'   => $streetName,
+                    'locality'     => $municipality,
+                    'postalCode'   => $postCode,
+                    'countryCode'  => $countryCode,
+                ]);
+
+            }
         }
 
         return new AddressCollection($results);
