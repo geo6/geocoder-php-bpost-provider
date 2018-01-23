@@ -140,7 +140,6 @@ final class bpost extends AbstractHttpProvider implements Provider
                     'postalCode'   => $postCode,
                     'countryCode'  => $countryCode,
                 ]);
-
             }
         }
 
