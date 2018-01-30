@@ -14,7 +14,9 @@ namespace Geocoder\Provider\bpost;
 
 use Geocoder\Collection;
 use Geocoder\Exception\InvalidArgument;
+use Geocoder\Exception\InvalidCredentials;
 use Geocoder\Exception\InvalidServerResponse;
+use Geocoder\Exception\QuotaExceeded;
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Http\Provider\AbstractHttpProvider;
 use Geocoder\Model\Address;
