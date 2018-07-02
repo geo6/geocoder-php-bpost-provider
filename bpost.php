@@ -26,6 +26,7 @@ use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
 use Http\Client\HttpClient;
+use GuzzleHttp\Psr7;
 
 /**
  * @author Jonathan Beliën <jbe@geo6.be>
@@ -172,43 +173,20 @@ final class bpost extends AbstractHttpProvider implements Provider
      */
     private function executeQuery(string $url, string $data): \stdClass
     {
-        $content = $this->postUrlContents($url, $data);
-        $json = json_decode($content);
+        $request = $this->getRequest($url);
+
+        $request = $request->withMethod('POST');
+        $request = $request->withHeader('Content-Type', 'application/json');
+        $request = $request->withBody(Psr7\stream_for($data));
+
+        $body = $this->getParsedResponse($request);
+
+        $json = json_decode($body);
         // API error
         if (!isset($json)) {
             throw InvalidServerResponse::create($url);
         }
 
         return $json;
-    }
-
-    /**
-     * Get URL and return contents. If content is empty, an exception will be thrown.
-     *
-     * @param string $url
-     * @param string $body
-     *
-     * @throws InvalidServerResponse
-     *
-     * @return string
-     */
-    protected function postUrlContents(string $url, string $body): string
-    {
-        $request = $this->getMessageFactory()->createRequest('POST', $url, ['Content-Type' => 'application/json'], $body);
-        $response = $this->getHttpClient()->sendRequest($request);
-        $statusCode = $response->getStatusCode();
-        if (401 === $statusCode || 403 === $statusCode) {
-            throw new InvalidCredentials();
-        } elseif (429 === $statusCode) {
-            throw new QuotaExceeded();
-        } elseif ($statusCode >= 300) {
-            throw InvalidServerResponse::create($url, $statusCode);
-        }
-        $body = (string) $response->getBody();
-        if (empty($body)) {
-            throw InvalidServerResponse::emptyResponse($url);
-        }
-
-        return $body;
     }
 }
