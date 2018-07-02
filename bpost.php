@@ -20,6 +20,7 @@ use Geocoder\Exception\QuotaExceeded;
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Http\Provider\AbstractHttpProvider;
 use Geocoder\Model\Address;
+use Geocoder\Model\AddressBuilder;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
@@ -130,18 +131,18 @@ final class bpost extends AbstractHttpProvider implements Provider
                 $number = !empty($postalAddress->StructuredDeliveryPointLocation->StreetNumber) ? $postalAddress->StructuredDeliveryPointLocation->StreetNumber : null;
                 $municipality = !empty($postalAddress->StructuredPostalCodeMunicipality->MunicipalityName) ? $postalAddress->StructuredPostalCodeMunicipality->MunicipalityName : null;
                 $postCode = !empty($postalAddress->StructuredPostalCodeMunicipality->PostalCode) ? $postalAddress->StructuredPostalCodeMunicipality->PostalCode : null;
-                $countryCode = 'BE';
+                $country = !empty($postalAddress->CountryName) ? $postalAddress->CountryName : null;
 
-                $results[] = Address::createFromArray([
-                    'providedBy'   => $this->getName(),
-                    'latitude'     => $coordinates->Latitude->Value,
-                    'longitude'    => $coordinates->Longitude->Value,
-                    'streetNumber' => $number,
-                    'streetName'   => $streetName,
-                    'locality'     => $municipality,
-                    'postalCode'   => $postCode,
-                    'countryCode'  => $countryCode,
-                ]);
+                $builder = new AddressBuilder($this->getName());
+                $builder->setCoordinates($coordinates->Latitude->Value, $coordinates->Longitude->Value)
+                    ->setStreetNumber($number)
+                    ->setStreetName($streetName)
+                    ->setLocality($municipality)
+                    ->setPostalCode($postCode)
+                    ->setCountry($country ?? null)
+                    ->setCountry($country);
+
+                $results[] = $builder->build();
             }
         }
 
