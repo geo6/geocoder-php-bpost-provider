@@ -14,9 +14,7 @@ namespace Geocoder\Provider\bpost;
 
 use Geocoder\Collection;
 use Geocoder\Exception\InvalidArgument;
-use Geocoder\Exception\InvalidCredentials;
 use Geocoder\Exception\InvalidServerResponse;
-use Geocoder\Exception\QuotaExceeded;
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Http\Provider\AbstractHttpProvider;
 use Geocoder\Model\Address;
@@ -25,8 +23,8 @@ use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
-use Http\Client\HttpClient;
 use GuzzleHttp\Psr7;
+use Http\Client\HttpClient;
 
 /**
  * @author Jonathan Beliën <jbe@geo6.be>
