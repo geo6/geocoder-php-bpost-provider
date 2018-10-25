@@ -52,7 +52,7 @@ final class bpost extends AbstractHttpProvider implements Provider
         $address = $query->getText();
         // This API does not support IP
         if (filter_var($address, FILTER_VALIDATE_IP)) {
-            throw new UnsupportedOperation('The UrbIS provider does not support IP addresses, only street addresses.');
+            throw new UnsupportedOperation('The bpost provider does not support IP addresses, only street addresses.');
         }
 
         // Save a request if no valid address entered
