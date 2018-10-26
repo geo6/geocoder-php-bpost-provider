@@ -138,7 +138,6 @@ final class bpost extends AbstractHttpProvider implements Provider
                     ->setStreetName($streetName)
                     ->setLocality($municipality)
                     ->setPostalCode($postCode)
-                    ->setCountry($country ?? null)
                     ->setCountry($country);
 
                 $results[] = $builder->build();
@@ -171,15 +170,18 @@ final class bpost extends AbstractHttpProvider implements Provider
      */
     private function executeQuery(string $url, string $data): \stdClass
     {
-        $request = $this->getRequest($url);
-
-        $request = $request->withMethod('POST');
-        $request = $request->withHeader('Content-Type', 'application/json');
-        $request = $request->withBody(Psr7\stream_for($data));
+        $request = $this->getMessageFactory()->createRequest(
+            'POST',
+            $url,
+            [
+                'Content-Type' => 'application/json',
+            ],
+            $data
+        );
 
         $body = $this->getParsedResponse($request);
-
         $json = json_decode($body);
+
         // API error
         if (!isset($json)) {
             throw InvalidServerResponse::create($url);
