@@ -15,6 +15,7 @@ namespace Geocoder\Provider\bpost\Tests;
 use Geocoder\IntegrationTest\BaseTestCase;
 use Geocoder\Provider\bpost\bpost;
 use Geocoder\Query\GeocodeQuery;
+use Geocoder\Query\ReverseQuery;
 
 class bpostTest extends BaseTestCase
 {
@@ -51,6 +52,16 @@ class bpostTest extends BaseTestCase
     {
         $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
         $provider->geocodeQuery(GeocodeQuery::create('::ffff:88.188.221.14'));
+    }
+
+    /**
+     * @expectedException \Geocoder\Exception\UnsupportedOperation
+     * @expectedExceptionMessage The bpost provider does not support reverse geocoding.
+     */
+    public function testReverseQuery()
+    {
+        $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider->reverseQuery(ReverseQuery::fromCoordinates(0, 0));
     }
 
     public function testGeocodeQuery()
