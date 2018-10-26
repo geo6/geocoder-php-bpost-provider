@@ -67,7 +67,7 @@ class bpostTest extends BaseTestCase
     public function testGeocodeQuery()
     {
         $provider = new bpost($this->getHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
-        $results = $provider->geocodeQuery(GeocodeQuery::create('35 avenue jean de bologne 1020 bruxelles'));
+        $results = $provider->geocodeQuery(GeocodeQuery::create('5 Place des Palais 1000 Bruxelles'));
 
         $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);
         $this->assertCount(1, $results);
@@ -75,21 +75,21 @@ class bpostTest extends BaseTestCase
         /** @var \Geocoder\Model\Address $result */
         $result = $results->first();
         $this->assertInstanceOf('\Geocoder\Model\Address', $result);
-        $this->assertEquals(50.896344, $result->getCoordinates()->getLatitude(), '', 0.01);
-        $this->assertEquals(4.3605984, $result->getCoordinates()->getLongitude(), '', 0.01);
-        $this->assertEquals('35', $result->getStreetNumber());
-        $this->assertEquals('AVENUE JEAN DE BOLOGNE', $result->getStreetName());
-        $this->assertEquals('1020', $result->getPostalCode());
+        $this->assertEquals(50.842931, $result->getCoordinates()->getLatitude(), '', 0.00001);
+        $this->assertEquals(4.361186, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEquals('5', $result->getStreetNumber());
+        $this->assertEquals('PLACE DES PALAIS', $result->getStreetName());
+        $this->assertEquals('1000', $result->getPostalCode());
         $this->assertEquals('BRUXELLES', $result->getLocality());
         $this->assertEquals('BELGIQUE', $result->getCountry());
     }
 
     public function testGeocodeQueryWithData()
     {
-        $query = GeocodeQuery::create('35 avenue jean de bologne 1020 bruxelles')
-            ->withData('streetName', 'avenue jean de bologne')
-            ->withData('streetNumber', '35')
-            ->withData('postalCode', 'bruxelles')
+        $query = GeocodeQuery::create('5 Place des Palais 1000 Bruxelles')
+            ->withData('streetNumber', '5')
+            ->withData('streetName', 'Place des Palais')
+            ->withData('postalCode', '1000')
             ->withData('locality', 'bruxelles');
 
         $provider = new bpost($this->getHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
@@ -101,11 +101,11 @@ class bpostTest extends BaseTestCase
         /** @var \Geocoder\Model\Address $result */
         $result = $results->first();
         $this->assertInstanceOf('\Geocoder\Model\Address', $result);
-        $this->assertEquals(50.896344, $result->getCoordinates()->getLatitude(), '', 0.01);
-        $this->assertEquals(4.3605984, $result->getCoordinates()->getLongitude(), '', 0.01);
-        $this->assertEquals('35', $result->getStreetNumber());
-        $this->assertEquals('AVENUE JEAN DE BOLOGNE', $result->getStreetName());
-        $this->assertEquals('1020', $result->getPostalCode());
+        $this->assertEquals(50.842931, $result->getCoordinates()->getLatitude(), '', 0.00001);
+        $this->assertEquals(4.361186, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEquals('5', $result->getStreetNumber());
+        $this->assertEquals('PLACE DES PALAIS', $result->getStreetName());
+        $this->assertEquals('1000', $result->getPostalCode());
         $this->assertEquals('BRUXELLES', $result->getLocality());
         $this->assertEquals('BELGIQUE', $result->getCountry());
     }
