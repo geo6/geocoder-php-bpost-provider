@@ -90,7 +90,7 @@ class bpostTest extends BaseTestCase
             ->withData('streetNumber', '5')
             ->withData('streetName', 'Place des Palais')
             ->withData('postalCode', '1000')
-            ->withData('locality', 'bruxelles');
+            ->withData('locality', 'Bruxelles');
 
         $provider = new bpost($this->getHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
         $results = $provider->geocodeQuery($query);
