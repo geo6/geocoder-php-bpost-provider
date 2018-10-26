@@ -34,5 +34,9 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit",
+        "test-ci": "phpunit --coverage-text --coverage-clover=build/coverage.xml"
+    }
 }
