@@ -23,7 +23,6 @@ use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
-use GuzzleHttp\Psr7;
 use Http\Client\HttpClient;
 
 /**

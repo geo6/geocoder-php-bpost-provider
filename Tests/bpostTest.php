@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Geocoder\Provider\bpost\Tests;
 
-use Geocoder\Collection;
 use Geocoder\IntegrationTest\BaseTestCase;
-use Geocoder\Location;
-use Geocoder\Query\GeocodeQuery;
 use Geocoder\Provider\bpost\bpost;
+use Geocoder\Query\GeocodeQuery;
 
 class bpostTest extends BaseTestCase
 {
