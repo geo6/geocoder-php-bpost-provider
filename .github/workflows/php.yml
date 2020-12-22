@@ -29,6 +29,6 @@ jobs:
     - name: Run test suite
       run: composer run-script test-ci
     - name: Send code coverage to Scrutinizer
-      run:
+      run: |
         wget -q https://scrutinizer-ci.com/ocular.phar
         php ocular.phar code-coverage:upload --format=php-clover coverage.clover
