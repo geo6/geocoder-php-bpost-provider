@@ -30,7 +30,7 @@ class IntegrationTest extends ProviderIntegrationTest
 
     protected function createProvider(HttpClient $httpClient)
     {
-        return new bpost($httpClient, 'Geocoder PHP/bpost Provider/Integration Test');
+        return new bpost($httpClient);
     }
 
     protected function getCacheDir()

@@ -29,7 +29,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getMockedHttpClient());
         $provider->geocodeQuery(GeocodeQuery::create('127.0.0.1'));
     }
 
@@ -38,7 +38,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getMockedHttpClient());
         $provider->geocodeQuery(GeocodeQuery::create('::1'));
     }
 
@@ -47,7 +47,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getMockedHttpClient());
         $provider->geocodeQuery(GeocodeQuery::create('::ffff:88.188.221.14'));
     }
 
@@ -56,13 +56,13 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support reverse geocoding.');
 
-        $provider = new bpost($this->getMockedHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getMockedHttpClient());
         $provider->reverseQuery(ReverseQuery::fromCoordinates(0, 0));
     }
 
     public function testGeocodeQuery()
     {
-        $provider = new bpost($this->getHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getHttpClient());
         $results = $provider->geocodeQuery(GeocodeQuery::create('5 Place des Palais 1000 Bruxelles'));
 
         $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);
@@ -71,8 +71,8 @@ class bpostTest extends BaseTestCase
         /** @var \Geocoder\Model\Address $result */
         $result = $results->first();
         $this->assertInstanceOf('\Geocoder\Model\Address', $result);
-        $this->assertEquals(50.842931, $result->getCoordinates()->getLatitude(), '', 0.00001);
-        $this->assertEquals(4.361186, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEqualsWithDelta(50.842931, $result->getCoordinates()->getLatitude(), 0.00001);
+        $this->assertEqualsWithDelta(4.361186, $result->getCoordinates()->getLongitude(), 0.00001);
         $this->assertEquals('5', $result->getStreetNumber());
         $this->assertEquals('PLACE DES PALAIS', $result->getStreetName());
         $this->assertEquals('1000', $result->getPostalCode());
@@ -88,7 +88,7 @@ class bpostTest extends BaseTestCase
             ->withData('postalCode', '1000')
             ->withData('locality', 'Bruxelles');
 
-        $provider = new bpost($this->getHttpClient(), 'Geocoder PHP/bpost Provider/bpost Test');
+        $provider = new bpost($this->getHttpClient());
         $results = $provider->geocodeQuery($query);
 
         $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);
@@ -97,8 +97,8 @@ class bpostTest extends BaseTestCase
         /** @var \Geocoder\Model\Address $result */
         $result = $results->first();
         $this->assertInstanceOf('\Geocoder\Model\Address', $result);
-        $this->assertEquals(50.842931, $result->getCoordinates()->getLatitude(), '', 0.00001);
-        $this->assertEquals(4.361186, $result->getCoordinates()->getLongitude(), '', 0.00001);
+        $this->assertEqualsWithDelta(50.842931, $result->getCoordinates()->getLatitude(), 0.00001);
+        $this->assertEqualsWithDelta(4.361186, $result->getCoordinates()->getLongitude(), 0.00001);
         $this->assertEquals('5', $result->getStreetNumber());
         $this->assertEquals('PLACE DES PALAIS', $result->getStreetName());
         $this->assertEquals('1000', $result->getPostalCode());
