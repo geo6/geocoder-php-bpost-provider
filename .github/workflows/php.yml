@@ -21,12 +21,13 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         extensions: curl
+        coverage: xdebug
     - name: Validate composer.json and composer.lock
       run: composer validate
     - name: Install dependencies
       run: composer install --no-progress
     - name: Run test suite
       run: composer run-script test-ci
-    - run: |
-        wget https://scrutinizer-ci.com/ocular.phar
+    - run: Send code coverage to Scrutinizer
+        wget -q https://scrutinizer-ci.com/ocular.phar
         php ocular.phar code-coverage:upload --format=php-clover coverage.clover
