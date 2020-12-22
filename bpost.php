@@ -65,50 +65,50 @@ final class bpost extends AbstractHttpProvider implements Provider
 
         if (!is_null($streetName) && !is_null($streetNumber)) {
             $addressToValidate = [
-              '@id'           => 1,
-              'PostalAddress' => [
-                'DeliveryPointLocation' => [
-                  'StructuredDeliveryPointLocation' => [
-                    'StreetName'   => $query->getData('streetName'),
-                    'StreetNumber' => $query->getData('streetNumber'),
-                  ],
+                '@id'           => 1,
+                'PostalAddress' => [
+                    'DeliveryPointLocation' => [
+                        'StructuredDeliveryPointLocation' => [
+                            'StreetName'   => $query->getData('streetName'),
+                            'StreetNumber' => $query->getData('streetNumber'),
+                        ],
+                    ],
+                    'PostalCodeMunicipality' => [
+                        'StructuredPostalCodeMunicipality' => [
+                            'PostalCode'       => $query->getData('postalCode', ''),
+                            'MunicipalityName' => $query->getData('locality', ''),
+                        ],
+                    ],
                 ],
-                'PostalCodeMunicipality' => [
-                  'StructuredPostalCodeMunicipality' => [
-                    'PostalCode'       => $query->getData('postalCode', ''),
-                    'MunicipalityName' => $query->getData('locality', ''),
-                  ],
-                ],
-              ],
-              'DeliveringCountryISOCode'  => 'BE',
-              'DispatchingCountryISOCode' => 'BE',
+                'DeliveringCountryISOCode'  => 'BE',
+                'DispatchingCountryISOCode' => 'BE',
             ];
         } else {
             $addressToValidate = [
-            '@id'               => 1,
-            'AddressBlockLines' => [
-              'UnstructuredAddressLine' => $address,
-            ],
-            'DeliveringCountryISOCode'  => 'BE',
-            'DispatchingCountryISOCode' => 'BE',
-          ];
+                '@id'               => 1,
+                'AddressBlockLines' => [
+                    'UnstructuredAddressLine' => $address,
+                ],
+                'DeliveringCountryISOCode'  => 'BE',
+                'DispatchingCountryISOCode' => 'BE',
+            ];
         }
 
         $request = [];
         $request['ValidateAddressesRequest'] = [
-          'AddressToValidateList' => [
-            'AddressToValidate' => [
-              $addressToValidate,
+            'AddressToValidateList' => [
+                'AddressToValidate' => [
+                    $addressToValidate,
+                ],
             ],
-          ],
-          'ValidateAddressOptions' => [
-            'IncludeSuggestions'        => false,
-            'IncludeDefaultGeoLocation' => true,
-            'IncludeSubmittedAddress'   => true,
-          ],
-          'CallerIdentification' => [
-            'CallerName' => 'Geocoder PHP',
-          ],
+            'ValidateAddressOptions' => [
+                'IncludeSuggestions'        => false,
+                'IncludeDefaultGeoLocation' => true,
+                'IncludeSubmittedAddress'   => true,
+            ],
+            'CallerIdentification' => [
+                'CallerName' => 'Geocoder PHP',
+            ],
         ];
 
         $json = $this->executeQuery(self::GEOCODE_ENDPOINT_URL, json_encode($request));
