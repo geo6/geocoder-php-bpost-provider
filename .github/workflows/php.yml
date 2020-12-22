@@ -26,4 +26,7 @@ jobs:
     - name: Install dependencies
       run: composer install --no-progress
     - name: Run test suite
-      run: composer run-script test
+      run: composer run-script test-ci
+    - run: |
+        wget https://scrutinizer-ci.com/ocular.phar
+        php ocular.phar code-coverage:upload --format=php-clover coverage.clover
