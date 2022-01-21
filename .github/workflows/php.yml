@@ -2,9 +2,9 @@ name: PHP CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ '1.x' ]
   pull_request:
-    branches: [ master ]
+    branches: [ '1.x' ]
 
 jobs:
   test:
@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.3', '7.4', '8.0']
+        php-version: [ '7.4', '8.0', '8.1' ]
     steps:
     - uses: actions/checkout@v2
     - name: Use PHP ${{ matrix.php-version }}
