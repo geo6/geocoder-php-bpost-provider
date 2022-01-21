@@ -29,7 +29,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient());
+        $provider = new bpost($this->getMockedHttpClient(), $_SERVER['BPOST_API_KEY']);
         $provider->geocodeQuery(GeocodeQuery::create('127.0.0.1'));
     }
 
@@ -38,7 +38,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient());
+        $provider = new bpost($this->getMockedHttpClient(), $_SERVER['BPOST_API_KEY']);
         $provider->geocodeQuery(GeocodeQuery::create('::1'));
     }
 
@@ -47,7 +47,7 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support IP addresses, only street addresses.');
 
-        $provider = new bpost($this->getMockedHttpClient());
+        $provider = new bpost($this->getMockedHttpClient(), $_SERVER['BPOST_API_KEY']);
         $provider->geocodeQuery(GeocodeQuery::create('::ffff:88.188.221.14'));
     }
 
@@ -56,13 +56,13 @@ class bpostTest extends BaseTestCase
         $this->expectException(\Geocoder\Exception\UnsupportedOperation::class);
         $this->expectExceptionMessage('The bpost provider does not support reverse geocoding.');
 
-        $provider = new bpost($this->getMockedHttpClient());
+        $provider = new bpost($this->getMockedHttpClient(), $_SERVER['BPOST_API_KEY']);
         $provider->reverseQuery(ReverseQuery::fromCoordinates(0, 0));
     }
 
     public function testGeocodeQuery()
     {
-        $provider = new bpost($this->getHttpClient());
+        $provider = new bpost($this->getHttpClient($_SERVER['BPOST_API_KEY']), $_SERVER['BPOST_API_KEY']);
         $results = $provider->geocodeQuery(GeocodeQuery::create('5 Place des Palais 1000 Bruxelles'));
 
         $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);
@@ -88,7 +88,7 @@ class bpostTest extends BaseTestCase
             ->withData('postalCode', '1000')
             ->withData('locality', 'Bruxelles');
 
-        $provider = new bpost($this->getHttpClient());
+        $provider = new bpost($this->getHttpClient($_SERVER['BPOST_API_KEY']), $_SERVER['BPOST_API_KEY']);
         $results = $provider->geocodeQuery($query);
 
         $this->assertInstanceOf('Geocoder\Model\AddressCollection', $results);

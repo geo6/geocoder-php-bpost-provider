@@ -30,7 +30,7 @@ class IntegrationTest extends ProviderIntegrationTest
 
     protected function createProvider(HttpClient $httpClient)
     {
-        return new bpost($httpClient);
+        return new bpost($httpClient, $_SERVER['BPOST_API_KEY']);
     }
 
     protected function getCacheDir()
@@ -40,5 +40,6 @@ class IntegrationTest extends ProviderIntegrationTest
 
     protected function getApiKey()
     {
+        return $_SERVER['BPOST_API_KEY'];
     }
 }
