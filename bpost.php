@@ -193,7 +193,7 @@ final class bpost extends AbstractHttpProvider implements Provider
             $url,
             [
                 'Content-Type' => 'application/json',
-                'x-api-key' => $this->apiKey,
+                'x-api-key'    => $this->apiKey,
             ],
             $data
         );
