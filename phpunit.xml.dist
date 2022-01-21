@@ -10,6 +10,7 @@
     </exclude>
   </coverage>
   <php>
+    <server name="BPOST_API_KEY" value="YOUR_API_KEY"/>
     <server name="USE_CACHED_RESPONSES" value="true"/>
   </php>
   <testsuites>
