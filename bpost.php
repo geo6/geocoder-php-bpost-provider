@@ -14,6 +14,7 @@ namespace Geocoder\Provider\bpost;
 
 use Geocoder\Collection;
 use Geocoder\Exception\InvalidArgument;
+use Geocoder\Exception\InvalidCredentials;
 use Geocoder\Exception\InvalidServerResponse;
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Http\Provider\AbstractHttpProvider;
@@ -33,14 +34,23 @@ final class bpost extends AbstractHttpProvider implements Provider
     /**
      * @var string
      */
-    const GEOCODE_ENDPOINT_URL = 'https://webservices-pub.bpost.be/ws/ExternalMailingAddressProofingCSREST_v1/address/validateAddresses';
+    const GEOCODE_ENDPOINT_TEST_URL = 'https://api.mailops-np.bpost.cloud/roa-info-st2/externalMailingAddressProofingRest/validateAddresses';
+    const GEOCODE_ENDPOINT_UAT_URL = 'https://api.mailops-np.bpost.cloud/roa-info-ac/externalMailingAddressProofingRest/validateAddresses';
+    const GEOCODE_ENDPOINT_PROD_URL = 'https://api.mailops.bpost.cloud/roa-info/externalMailingAddressProofingRest/validateAddresses';
+
+    /**
+     * @var string|null
+     */
+    private $apiKey;
 
     /**
      * @param HttpClient $client an HTTP adapter
      */
-    public function __construct(HttpClient $client)
+    public function __construct(HttpClient $client, string $apiKey = null)
     {
         parent::__construct($client);
+
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -87,7 +97,12 @@ final class bpost extends AbstractHttpProvider implements Provider
             $addressToValidate = [
                 '@id'               => 1,
                 'AddressBlockLines' => [
-                    'UnstructuredAddressLine' => $address,
+                    'UnstructuredAddressLine' => [
+                        [
+                            '*body'   => $address,
+                            '@locale' => $query->getLocale(),
+                        ],
+                    ],
                 ],
                 'DeliveringCountryISOCode'  => 'BE',
                 'DispatchingCountryISOCode' => 'BE',
@@ -111,7 +126,7 @@ final class bpost extends AbstractHttpProvider implements Provider
             ],
         ];
 
-        $json = $this->executeQuery(self::GEOCODE_ENDPOINT_URL, json_encode($request));
+        $json = $this->executeQuery(self::GEOCODE_ENDPOINT_PROD_URL, json_encode($request));
 
         // no result
         if (empty($json->ValidateAddressesResponse->ValidatedAddressResultList->ValidatedAddressResult)) {
@@ -169,11 +184,16 @@ final class bpost extends AbstractHttpProvider implements Provider
      */
     private function executeQuery(string $url, string $data): \stdClass
     {
+        if (null === $this->apiKey) {
+            throw new InvalidCredentials('You must provide an API key.');
+        }
+
         $request = $this->getMessageFactory()->createRequest(
             'POST',
             $url,
             [
                 'Content-Type' => 'application/json',
+                'x-api-key' => $this->apiKey,
             ],
             $data
         );
