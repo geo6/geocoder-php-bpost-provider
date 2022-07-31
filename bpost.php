@@ -17,13 +17,12 @@ use Geocoder\Exception\InvalidArgument;
 use Geocoder\Exception\InvalidServerResponse;
 use Geocoder\Exception\UnsupportedOperation;
 use Geocoder\Http\Provider\AbstractHttpProvider;
-use Geocoder\Model\Address;
 use Geocoder\Model\AddressBuilder;
 use Geocoder\Model\AddressCollection;
 use Geocoder\Provider\Provider;
 use Geocoder\Query\GeocodeQuery;
 use Geocoder\Query\ReverseQuery;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 
 /**
  * @author Jonathan Beliën <jbe@geo6.be>
@@ -36,9 +35,9 @@ final class bpost extends AbstractHttpProvider implements Provider
     const GEOCODE_ENDPOINT_URL = 'https://webservices-pub.bpost.be/ws/ExternalMailingAddressProofingCSREST_v1/address/validateAddresses';
 
     /**
-     * @param HttpClient $client an HTTP adapter
+     * @param ClientInterface $client an HTTP adapter
      */
-    public function __construct(HttpClient $client)
+    public function __construct(ClientInterface $client)
     {
         parent::__construct($client);
     }

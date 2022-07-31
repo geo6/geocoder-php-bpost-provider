@@ -12,7 +12,7 @@ namespace Geocoder\Provider\bpost\Tests;
 
 use Geocoder\IntegrationTest\ProviderIntegrationTest;
 use Geocoder\Provider\bpost\bpost;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientInterface;
 
 class IntegrationTest extends ProviderIntegrationTest
 {
@@ -28,7 +28,7 @@ class IntegrationTest extends ProviderIntegrationTest
         'testGeocodeQuery' => 'Belgium only.',
     ];
 
-    protected function createProvider(HttpClient $httpClient)
+    protected function createProvider(ClientInterface $httpClient)
     {
         return new bpost($httpClient);
     }
