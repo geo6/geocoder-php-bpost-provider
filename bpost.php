@@ -168,7 +168,7 @@ final class bpost extends AbstractHttpProvider implements Provider
      */
     private function executeQuery(string $url, string $data): \stdClass
     {
-        $request = $this->getMessageFactory()->createRequest(
+        $request = $this->createRequest(
             'POST',
             $url,
             [
